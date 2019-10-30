@@ -26,7 +26,7 @@ class spin_cavity(num_spins, cavity_modes, spin_interaction):
         self.cavity_modes = cavity_modes;
 
 
-    def _generate_spin_Hamiltonian(spin_interaction, ):
+    def _generate_spin_Hamiltonian(spin_interaction, connectivity='nn'):
 
         if self.construction == "Chain":
             Ham = _chain_Hamiltoian(self.S, spin_interaction)
@@ -50,7 +50,7 @@ class spin_cavity(num_spins, cavity_modes, spin_interaction):
                 vector on the bloch sphere along which the spins are (anti) aligned
                 ***(Currently only allows {x,y, or z})***
 
-        Nup : int
+        Sz_sector : int
                 Argument for QuSpin Spin Basis Constructor that defines the limited
                 spin space for the basis states. Condition that N<L.
 
@@ -77,10 +77,51 @@ class spin_cavity(num_spins, cavity_modes, spin_interaction):
 
         return ps_state, basis;
 
-    def _ground_state(initial_Hamiltonian, Sz_secton=None):
+    def _ground_state(initial_Hamiltonian, Sz_sector=None):
+        '''Generate a ground state for a particular Hamiltonian. Particularly useful
+        for performing quench dynamics.
 
+        Parameters
+        --------------
+        initial_Hamiltonian : list
+                list contains basis over which components of the Hamiltonian are acting in line
+                with Static lists used in QuSpin: [["operator string", ["Energy", "adjacency indices for interactions"]]];
+                Example operator strings found at http://weinbe58.github.io/QuSpin/basis.html
 
-    def _photon_state(cavity, coherent="False");
+        Sz_sector : int
+                Argument for QuSpin Spin Basis Constructor that defines the limited
+                spin space for the basis states. Condition that N<L.
+
+        Returns
+        --------------
+        ps_state : numpy.ndarray
+                Ground state of provided Hamiltonian.
+
+        basis : quspin.basis.basis_1d.spin.spin_basis_1d
+                Basis in which the state is represented.
+        '''
+        basis = spin_basis1d(L=self.S, Nup=Sz_sector);
+        H = hamiltonian(initial_Hamiltonian, [], dtype=np.float64, basis=basis);
+        E_min,psi_0 = H.eigsh(k=self.S,which="SA"); #Get ground state (A)FM product state
+        ps_state = psi_0.T[0].reshape((-1,));
+
+        return ps_state, basis;
+
+    def _photon_state(cavity, expt_N=1, state="fock"):
+        '''Define the cavity state for a provided cavity class instance
+
+        Parameters
+        -------------
+        cavity : cavity.cavity
+                Instance of cavity class that is initialized with number of sites and modes and the type (Bosonic, Fermionic)
+
+        expt_N : float
+                Expectation value for the number of active modes on each site in the cavity.
+
+        state : string
+                State in which to prepare the cavity: Fock, Coherent, or Thermal
+        '''
+        cavity.cavity_state(expt_N, state);
 
     def time_evolve(initial_spin_state, initial_photon_state, tE_Hamiltonian, t_f = 10.0, d_t=1000):
         ''' Time evolve an initial spin and cavity state with a provided hamiltonian.
