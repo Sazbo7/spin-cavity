@@ -16,8 +16,6 @@ from qutip import *
 from qutip.piqs import *
 
 
-
-
 class spin_cavity(num_spins, cavity_modes, spin_interaction):
 
     def __init__(num_spins, cavity_modes):
@@ -38,7 +36,7 @@ class spin_cavity(num_spins, cavity_modes, spin_interaction):
 
 
 
-    def _product_state(align='ferro', H_vector='z', Nup=None):
+    def _product_state(align='ferro', H_vector='z', Sz_sector=None):
         '''Generate a product state along a particular vector direction on Bloch
         sphere.
 
@@ -65,7 +63,7 @@ class spin_cavity(num_spins, cavity_modes, spin_interaction):
                 Basis in which the state is represented.
         '''
 
-        basis = spin_basis1d(L=self.S, Nup=Nup);
+        basis = spin_basis1d(L=self.S, Nup=Sz_sector);
         pi_control = (-1) ** (align=='antiferro'); #(Anti) align neighboring spins
 
         H_field = [[1.0 * pi_control**i, i] for i in range(self.S)]; #Magnetic field energies
@@ -79,7 +77,10 @@ class spin_cavity(num_spins, cavity_modes, spin_interaction):
 
         return ps_state, basis;
 
-    def _photon_state(cavity, coherent="False"=)
+    def _ground_state(initial_Hamiltonian, Sz_secton=None):
+
+
+    def _photon_state(cavity, coherent="False");
 
     def time_evolve(initial_spin_state, initial_photon_state, tE_Hamiltonian, t_f = 10.0, d_t=1000):
         ''' Time evolve an initial spin and cavity state with a provided hamiltonian.

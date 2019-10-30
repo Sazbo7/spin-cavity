@@ -15,7 +15,7 @@ from quspin.basis.photon import coherent_state
 from qutip import *
 from qutip.piqs import *
 
-class boson_cavity(type='Uniform', Ntot, sites=1, species=1):
+class cavity(type='Uniform', Ntot, sites=1, species=1):
 
     def __init__(type, Ntot):
 
@@ -27,6 +27,9 @@ class boson_cavity(type='Uniform', Ntot, sites=1, species=1):
 
         _get_cavity_basis();
 
+    def cavity_state(expt_N=1, state='fock'):
+        self.state=state;
+        _set_cavity_state(expt_N);
 
     def _get_cavity_basis():
         '''Get the basis states for the external coupled system in which to work in.
@@ -57,3 +60,23 @@ class boson_cavity(type='Uniform', Ntot, sites=1, species=1):
 
         if self.type == 'fLocal':
             self.basis=spinless_fermion_basis_1d(L=self.sites, Nf=None, nf=None);
+
+    def _set_cavity_state(expt_N):
+
+        if self.state=='coherent':
+            psi = coherent_state(expt_N, self.Ntot);
+            psi = psi.reshape(Ntot,1)
+            self.psi = psi;
+            self.dm = psi.T * psi;
+
+        if self.state=='thermal':
+            dm = thermal(self.Ntot, expt_N);
+            dm = dm.get_data().toarray();
+            self.dm = dm;
+
+        if self.state=='fock':
+            psi=np.zeros([self.Ntot]);
+            psi[expt_N] = 1.0;
+            psi = psi.reshape(Ntot,1)
+            self.psi = psi;
+            self.dm = psi.T * psi;
