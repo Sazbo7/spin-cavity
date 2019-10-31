@@ -6,7 +6,7 @@ import numpy as np
 import scipy as sp
 from sp.sparse import load_npz, save_npz
 
-from quspin.basis import spin_basis1d,photon_basis,boson_basis1d
+from quspin.basis import spin_basis_1d,photon_basis,boson_basis_1d
 from quspin.operators import hamiltonian, quantum_operator
 from quspin.tools.measurements import obs_vs_time
 from quspin.tools.Floquet import Floquet, Flotquet_t_vec
@@ -16,9 +16,9 @@ from qutip import *
 from qutip.piqs import *
 
 
-class spin_cavity(num_spins, cavity_modes, spin_interaction):
+class spin_cavity:
 
-    def __init__(num_spins, cavity_modes):
+    def __init__(num_spins, cavity_modes, spin_interaction):
         if num_spins > 24:
             ValueError("Good luck with that system size")
 
