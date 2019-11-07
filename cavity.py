@@ -32,7 +32,7 @@ class cavity:
             Number of individual cavities to consider. Default is a single cavity.
 
         species : int
-            Number of different bosonic modes that exist on each site. In the thermal limit this is a continuum.
+            Number of different bosonic modes that exist on each site (species $\geq$1). In the thermal limit this is a continuum.
         '''
 
         self.types=types;
@@ -43,7 +43,7 @@ class cavity:
 
         self._set_cavity_basis();
 
-    def cavity_state(self, expt_N=1, state='fock'):
+    def cavity_state(self, expt_N=0, state='fock'):
         '''Sets an initial cavity wave function provided the basis created at initialization.
 
         Parameters
@@ -161,7 +161,7 @@ class cavity:
                         psi_s = coherent_state(expt_N[0], self.Ntot);
                         psi_s = psi_s.reshape(Ntot,1);
                         psi = psi_s;
-                        for i in range(self.sites):
+                        for i in range(1, self.sites):
                             psi_s = coherent_state(expt_N[i], self.Ntot);
                             psi_s = psi_s.reshape(Ntot,1);
                             psi = np.kron(psi, psi_s);
@@ -172,7 +172,7 @@ class cavity:
                         dm_s = thermal(self.Ntot, expt_N);
                         dm_s = dm.get_data().toarray();
                         dm = dm_s;
-                        for i in range(self.sites):
+                        for i in range(1, self.sites):
                             dm = np.kron(dm, dm_s);
                         self.dm=dm;
                         self.psi=None;
@@ -182,7 +182,7 @@ class cavity:
                         psi_s[expt_N] = 1.0;
                         psi_s = psi_s.reshape(Ntot,1)
                         psi = psi_s;
-                        for i in range(self.sites):
+                        for i in range(1, self.sites):
                             psi_s=np.zeros([self.Ntot]);
                             psi_s[expt_N[i]] = 1.0;
                             psi_s = psi_s.reshape(Ntot,1)
@@ -191,7 +191,6 @@ class cavity:
                         self.dm = psi.T * psi;
                 except TypeError:
                     print('Invalid entry for initialinzing the cavity state');
-
 
     def get_cavity_state(self, rep='psi'):
         '''Return the cavity wavefunction or density matrix.

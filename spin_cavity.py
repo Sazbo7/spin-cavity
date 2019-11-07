@@ -18,25 +18,36 @@ from qutip.piqs import *
 
 class spin_cavity:
 
-    def __init__(num_spins, cavity_modes, spin_interaction):
+    def __init__(self, num_spins, cavity_modes, spin_interaction):
         if num_spins > 24:
             ValueError("Good luck with that system size")
 
         self.S = num_spins;
         self.cavity_modes = cavity_modes;
+        self.interaction_dict = spin_interaction;
 
 
-    def _generate_spin_Hamiltonian(spin_interaction, connectivity='nn'):
+    def set_spin_interactions(self, spin_interactions):
+        '''Ensure that the new spin_interactions follows the appropriate format for identifying spin_interactions
+
+        Parameters
+        -----------
+        spin_interactions : dict
+                Dictionary that defines the type of keywords that 
+        '''
+
+
+    def _generate_spin_Hamiltonian(self):
 
         if self.construction == "Chain":
-            Ham = _chain_Hamiltonian(self.S, spin_interaction)
+            Ham,static = _chain_Hamiltonian(self.S, spin_interaction)
 
         elif self.construction == "Ladder":
             Ham = _ladder_Hamiltionian(self.S, spin_interaction)
 
 
 
-    def _chain_Hamiltonian(num_spins, interaction_dict):
+    def _chain_Hamiltonian(self):
 
         interaction_dict = {'Kitaev':(Kxx, Kyy, Kzz), 'Heisenberg':(Jxx, Jyy, Jzz), 'Field':(hx, hy, hz)}
 
@@ -61,9 +72,11 @@ class spin_cavity:
 
         static= [["xx", Jxx_list],["yy", Jyy_list],["zz",J_z_list],["xx", Kxx_list],["yy", Kyy_list], ["x", Hx_list],["y", Hy_list],["z", Hz_list]]
         dynamic=[]
+        Hamiltion = hamiltonian(static,dynamic,dtype=np.float64,basis=basis)
+        return Hamiltion,static;
 
 
-    def _product_state(align='ferro', H_vector='z', Sz_sector=None):
+    def _product_state(self, align='ferro', H_vector='z', Sz_sector=None):
         '''Generate a product state along a particular vector direction on Bloch
         sphere.
 
@@ -104,7 +117,7 @@ class spin_cavity:
 
         return ps_state, basis;
 
-    def _n_state(initial_Hamiltonian, n=0, Sz_sector=None):
+    def _n_state(self, initial_Hamiltonian, n=0, Sz_sector=None):
         '''Generate a eigenstate state for a particular Hamiltonian. Particularly useful
         for performing quench dynamics. n=0 is the ground state, n=1 is first excited state etc.
 
