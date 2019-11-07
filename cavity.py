@@ -99,34 +99,99 @@ class cavity:
 
         Parameters
         ------------
-        expt_N : float
+        expt_N : float, list or numpy.array
             Expectation value for the number occupation on each site ***Need to include functionality to accept array of size SITES***
         '''
 
         if self.type=='Uniform':
-            if self.state=='coherent':
-                psi = coherent_state(expt_N, self.Ntot);
-                psi = psi.reshape(Ntot,1)
-                self.psi = psi;
-                self.dm = psi.T * psi;
+            try:
+                if self.state=='coherent':
+                    psi = coherent_state(expt_N, self.Ntot);
+                    psi = psi.reshape(Ntot,1)
+                    self.psi = psi;
+                    self.dm = psi.T * psi;
 
-            if self.state=='thermal':
-                dm = thermal(self.Ntot, expt_N);
-                dm = dm.get_data().toarray();
-                self.dm = dm;
-                self.psi=None;
+                if self.state=='thermal':
+                    dm = thermal(self.Ntot, expt_N);
+                    dm = dm.get_data().toarray();
+                    self.dm = dm;
+                    self.psi=None;
 
-            if self.state=='fock':
-                psi=np.zeros([self.Ntot]);
-                psi[expt_N] = 1.0;
-                psi = psi.reshape(Ntot,1)
-                self.psi = psi;
-                self.dm = psi.T * psi;
+                if self.state=='fock':
+                    psi=np.zeros([self.Ntot]);
+                    psi[expt_N] = 1.0;
+                    psi = psi.reshape(Ntot,1)
+                    self.psi = psi;
+                    self.dm = psi.T * psi;
+            except TypeError:
+                print("Using a uniform environment: occupation must be a float not list")
 
         if self.type=='Local':
-            if self.state=='coherent':
-                psi = coherent_state(expt_N, self.Ntot);
-                psi = psi.reshape(Ntot,1);
+            if isinstance(expt_N, float):
+                if self.state=='coherent':
+                    psi_s = coherent_state(expt_N, self.Ntot);
+                    psi_s = psi_s.reshape(Ntot,1);
+                    psi = psi_s;
+                    for i in range(self.sites):
+                        psi = np.kron(psi, psi_s);
+                    self.psi=psi;
+                    self.dm = psi.T*psi;
+
+                if self.state=='thermal':
+                    dm_s = thermal(self.Ntot, expt_N);
+                    dm_s = dm.get_data().toarray();
+                    dm = dm_s;
+                    for i in range(self.sites):
+                        dm = np.kron(dm, dm_s);
+                    self.dm=dm;
+                    self.psi=None;
+
+                if self.state=='fock':
+                    psi_s=np.zeros([self.Ntot]);
+                    psi_s[expt_N] = 1.0;
+                    psi_s = psi_s.reshape(Ntot,1)
+                    psi = psi_s;
+                    for i in range(self.sites):
+                        psi = np.kron(psi, psi_s);
+                    self.psi = psi;
+                    self.dm = psi.T * psi;
+            else:
+                try:
+                    if self.state=='coherent':
+                        psi_s = coherent_state(expt_N[0], self.Ntot);
+                        psi_s = psi_s.reshape(Ntot,1);
+                        psi = psi_s;
+                        for i in range(self.sites):
+                            psi_s = coherent_state(expt_N[i], self.Ntot);
+                            psi_s = psi_s.reshape(Ntot,1);
+                            psi = np.kron(psi, psi_s);
+                        self.psi=psi;
+                        self.dm = psi.T*psi;
+
+                    if self.state=='thermal':
+                        dm_s = thermal(self.Ntot, expt_N);
+                        dm_s = dm.get_data().toarray();
+                        dm = dm_s;
+                        for i in range(self.sites):
+                            dm = np.kron(dm, dm_s);
+                        self.dm=dm;
+                        self.psi=None;
+
+                    if self.state=='fock':
+                        psi_s=np.zeros([self.Ntot]);
+                        psi_s[expt_N] = 1.0;
+                        psi_s = psi_s.reshape(Ntot,1)
+                        psi = psi_s;
+                        for i in range(self.sites):
+                            psi_s=np.zeros([self.Ntot]);
+                            psi_s[expt_N[i]] = 1.0;
+                            psi_s = psi_s.reshape(Ntot,1)
+                            psi = np.kron(psi, psi_s);
+                        self.psi = psi;
+                        self.dm = psi.T * psi;
+                except TypeError:
+                    print('Invalid entry for initialinzing the cavity state');
+
 
     def get_cavity_state(self, rep='psi'):
         '''Return the cavity wavefunction or density matrix.

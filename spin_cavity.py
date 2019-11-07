@@ -29,11 +29,38 @@ class spin_cavity:
     def _generate_spin_Hamiltonian(spin_interaction, connectivity='nn'):
 
         if self.construction == "Chain":
-            Ham = _chain_Hamiltoian(self.S, spin_interaction)
+            Ham = _chain_Hamiltonian(self.S, spin_interaction)
 
         elif self.construction == "Ladder":
             Ham = _ladder_Hamiltionian(self.S, spin_interaction)
 
+
+
+    def _chain_Hamiltonian(num_spins, interaction_dict):
+
+        interaction_dict = {'Kitaev':(Kxx, Kyy, Kzz), 'Heisenberg':(Jxx, Jyy, Jzz), 'Field':(hx, hy, hz)}
+
+        heis_ray = interaction_dict{'Heisenberg'};
+        kit_ray = interaction_dict{'Kitaev'};
+        field_ray = interaction_dict{'Field'};
+
+        assert heis_ray.shape[0] == self.S;
+        assert kit_ray.shape[0]==self.S//2;
+        assert field_ray.shape[0]==self.S
+
+        Jxx_list = [[heis_ray[i][0],i,(i+1)%L] for i in range(self.S)];
+        Jyy_list = [[heis_ray[i][1],i,(i+1)%L] for i in range(self.S)];
+        Jzz_list = [[heis_ray[i][2],i,(i+1)%L] for i in range(self.S)];
+
+        Kxx_list = [[kit_ray[i][0] * (1-i//2),i,(i+1)%L] for i in range(self.S)];
+        Kyy_list = [[kit_ray[i][1] * (i//2),i,(i+1)%L] for i in range(self.S)];
+
+        Hx_list = [[field_ray[i][0],i] for i in range(L)];
+        Hy_list = [[field_ray[i][0],i] for i in range(L)];
+        Hz_list = [[field_ray[i][0],i] for i in range(L)];
+
+        static= [["xx", Jxx_list],["yy", Jyy_list],["zz",J_z_list],["xx", Kxx_list],["yy", Kyy_list], ["x", Hx_list],["y", Hy_list],["z", Hz_list]]
+        dynamic=[]
 
 
     def _product_state(align='ferro', H_vector='z', Sz_sector=None):
@@ -77,12 +104,16 @@ class spin_cavity:
 
         return ps_state, basis;
 
-    def _ground_state(initial_Hamiltonian, Sz_sector=None):
-        '''Generate a ground state for a particular Hamiltonian. Particularly useful
-        for performing quench dynamics.
+    def _n_state(initial_Hamiltonian, n=0, Sz_sector=None):
+        '''Generate a eigenstate state for a particular Hamiltonian. Particularly useful
+        for performing quench dynamics. n=0 is the ground state, n=1 is first excited state etc.
 
         Parameters
         --------------
+
+        n : int
+                Index for which energy eigenstate to return.
+
         initial_Hamiltonian : list
                 list contains basis over which components of the Hamiltonian are acting in line
                 with Static lists used in QuSpin: [["operator string", ["Energy", "adjacency indices for interactions"]]];
@@ -100,10 +131,11 @@ class spin_cavity:
         basis : quspin.basis.basis_1d.spin.spin_basis_1d
                 Basis in which the state is represented.
         '''
+        max_index = max(self.S, n)
         basis = spin_basis1d(L=self.S, Nup=Sz_sector);
         H = hamiltonian(initial_Hamiltonian, [], dtype=np.float64, basis=basis);
-        E_min,psi_0 = H.eigsh(k=self.S,which="SA"); #Get ground state (A)FM product state
-        ps_state = psi_0.T[0].reshape((-1,));
+        E_min,psi = H.eigsh(k=2*max_index,which="SA"); #Get ground state (A)FM product state
+        ps_state = psi.T[n].reshape((-1,));
 
         return ps_state, basis;
 
