@@ -18,13 +18,14 @@ from qutip.piqs import *
 
 class spin_cavity:
 
-    def __init__(self, num_spins, cavity_modes, spin_interaction):
+    def __init__(self, num_spins, cavity_modes, spin_interactions=None):
         if num_spins > 24:
             ValueError("Good luck with that system size")
 
-        self.S = num_spins;
-        self.cavity_modes = cavity_modes;
-        self.interaction_dict = spin_interaction;
+        self.S=num_spins;
+        self.cavity_modes=cavity_modes;
+        self.interaction_dict=spin_interactions;
+        self.neighbor=None;
 
 
     def set_spin_interactions(self, spin_interactions):
@@ -33,8 +34,18 @@ class spin_cavity:
         Parameters
         -----------
         spin_interactions : dict
-                Dictionary that defines the type of keywords that 
+                Dictionary that defines the type of keywords and corresponding adjacency matrix for each.
         '''
+
+        assert type(spin_interactions) == dict, "Spin interactions must be stored in dictionary" ;
+
+        keywords = ('Field', 'Heisenberg', 'Kitaev');
+        for keyword in keywords:
+            assert keyword in spin_interactions.keys(), keyword + "term is missing";
+            adj_shape = spin_interaction(keyword).shape();
+            assert (self.S, 3) < adj_shape, "Adjacency Matrix for " + keyword + " is too small.";
+
+        self.interaction_dict = spin_interactions;
 
 
     def _generate_spin_Hamiltonian(self):
@@ -49,11 +60,9 @@ class spin_cavity:
 
     def _chain_Hamiltonian(self):
 
-        interaction_dict = {'Kitaev':(Kxx, Kyy, Kzz), 'Heisenberg':(Jxx, Jyy, Jzz), 'Field':(hx, hy, hz)}
-
-        heis_ray = interaction_dict{'Heisenberg'};
-        kit_ray = interaction_dict{'Kitaev'};
-        field_ray = interaction_dict{'Field'};
+        heis_ray = self.interaction_dict{'Heisenberg'};
+        kit_ray = self.interaction_dict{'Kitaev'};
+        field_ray = self.interaction_dict{'Field'};
 
         assert heis_ray.shape[0] == self.S;
         assert kit_ray.shape[0]==self.S//2;
