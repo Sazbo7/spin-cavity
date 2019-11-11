@@ -18,12 +18,13 @@ from qutip.piqs import *
 
 class spin_cavity:
 
-    def __init__(self, num_spins, cavity_modes, spin_interactions=None):
+    def __init__(self, num_spins, cavity_modes, construction='Chain', spin_interactions=None):
         if num_spins > 24:
             ValueError("Good luck with that system size")
 
         self.S=num_spins;
         self.cavity_modes=cavity_modes;
+        self.construction=construction;
         self.interaction_dict=spin_interactions;
         self.neighbor=None;
 
@@ -35,6 +36,7 @@ class spin_cavity:
         -----------
         spin_interactions : dict
                 Dictionary that defines the type of keywords and corresponding adjacency matrix for each.
+                Currently accepts {'Heisenberg', 'Kitaev', 'Field'}.
         '''
 
         assert type(spin_interactions) == dict, "Spin interactions must be stored in dictionary" ;
@@ -54,7 +56,7 @@ class spin_cavity:
             Ham,static = _chain_Hamiltonian(self.S, spin_interaction)
 
         elif self.construction == "Ladder":
-            Ham = _ladder_Hamiltionian(self.S, spin_interaction)
+            Ham,static = _ladder_Hamiltionian(self.S, spin_interaction)
 
 
 
@@ -76,12 +78,13 @@ class spin_cavity:
         Kyy_list = [[kit_ray[i][1] * (i//2),i,(i+1)%L] for i in range(self.S)];
 
         Hx_list = [[field_ray[i][0],i] for i in range(L)];
-        Hy_list = [[field_ray[i][0],i] for i in range(L)];
-        Hz_list = [[field_ray[i][0],i] for i in range(L)];
+        Hy_list = [[field_ray[i][1],i] for i in range(L)];
+        Hz_list = [[field_ray[i][2],i] for i in range(L)];
 
         static= [["xx", Jxx_list],["yy", Jyy_list],["zz",J_z_list],["xx", Kxx_list],["yy", Kyy_list], ["x", Hx_list],["y", Hy_list],["z", Hz_list]]
         dynamic=[]
-        Hamiltion = hamiltonian(static,dynamic,dtype=np.float64,basis=basis)
+        Hamiltion = hamiltonian(static,dynamic,dtype=np.float64,basis=basis);
+
         return Hamiltion,static;
 
 
