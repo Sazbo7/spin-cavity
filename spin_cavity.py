@@ -18,12 +18,11 @@ from qutip.piqs import *
 
 class spin_cavity:
 
-    def __init__(self, num_spins, cavity_modes, construction='Chain', spin_interactions=None):
+    def __init__(self, num_spins, construction='Chain', spin_interactions=None):
         if num_spins > 24:
             ValueError("Good luck with that system size")
 
         self.S=num_spins;
-        self.cavity_modes=cavity_modes;
         self.construction=construction;
         self.interaction_dict=spin_interactions;
         self.neighbor=None;
@@ -86,6 +85,8 @@ class spin_cavity:
         Hamiltion = hamiltonian(static,dynamic,dtype=np.float64,basis=basis);
 
         return Hamiltion,static;
+
+    def spin_cavity_coupling(self, cavity, coupled_sites=self.S, )
 
 
     def _product_state(self, align='ferro', H_vector='z', Sz_sector=None):
