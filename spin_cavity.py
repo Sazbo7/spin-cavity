@@ -96,8 +96,8 @@ class spin_cavity:
         Parameters
         --------------
         align : string
-                determines whether the initial state is ferromagnetic or
-                antiferromagnetic
+                determines whether the initial state is ferromagnetic,
+                antiferromagnetic, or random
 
         H_vector : string
                 vector on the bloch sphere along which the spins are (anti) aligned
@@ -119,14 +119,19 @@ class spin_cavity:
         basis = spin_basis1d(L=self.S, Nup=Sz_sector);
         pi_control = (-1) ** (align=='antiferro'); #(Anti) align neighboring spins
 
-        H_field = [[1.0 * pi_control**i, i] for i in range(self.S)]; #Magnetic field energies
-        static=[[H_vector,H_field]] #Assign direction to magnetic field
-        dynamic=[]
-        basis=spin_basis_1d(L=self.S);
-        H=hamiltonian(static,dynamic,dtype=np.float64,basis=basis)
+        if align != 'random':
 
-        E_min,psi_0 = H.eigsh(k=self.S,which="SA"); #Get ground state (A)FM product state
-        ps_state = psi_0.T[0].reshape((-1,));
+            H_field = [[1.0 * pi_control**i, i] for i in range(self.S)]; #Magnetic field energies
+            static=[[H_vector,H_field]] #Assign direction to magnetic field
+            dynamic=[]
+            basis=spin_basis_1d(L=self.S);
+            H=hamiltonian(static,dynamic,dtype=np.float64,basis=basis)
+
+            E_min,psi_0 = H.eigsh(k=self.S,which="SA"); #Get ground state (A)FM product state
+            ps_state = psi_0.T[0].reshape((-1,));
+
+        elif align == 'random':
+            ps_state = rand_ket(2**self.S);
 
         return ps_state, basis;
 
