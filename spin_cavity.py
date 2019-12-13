@@ -48,7 +48,6 @@ class spin_cavity:
 
         self.interaction_dict = spin_interactions;
 
-
     def _generate_spin_Hamiltonian(self):
 
         if self.construction == "Chain":
@@ -56,8 +55,6 @@ class spin_cavity:
 
         elif self.construction == "Ladder":
             Ham,static = _ladder_Hamiltionian(self.S, spin_interaction)
-
-
 
     def _chain_Hamiltonian(self):
 
@@ -86,8 +83,11 @@ class spin_cavity:
 
         return Hamiltion,static;
 
-    def spin_cavity_coupling(self, cavity, coupled_sites=self.S, )
+    def spin_cavity_coupling(self, cavity, coupled_sites=self.S, spin_excitation='x',cavity_excitation='+'):
 
+
+
+        return -1;
 
     def _product_state(self, align='ferro', H_vector='z', Sz_sector=None):
         '''Generate a product state along a particular vector direction on Bloch
@@ -186,7 +186,7 @@ class spin_cavity:
         '''
         cavity.cavity_state(expt_N, state);
 
-    def time_evolve(initial_spin_state, initial_photon_state, tE_Hamiltonian, t_f = 10.0, d_t=1000):
+    def time_evolve_static(initial_spin_state, initial_photon_state, tE_Hamiltonian, t_f = 10.0, d_t=1000):
         ''' Time evolve an initial spin and cavity state with a provided hamiltonian.
 
         Parameters
