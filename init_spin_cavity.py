@@ -2,7 +2,7 @@ def spin_photon_Nsite_DM(N, coupling, Nph_tot=10, state='ferro', decouple=0, pho
 
     ##### define Boson model parameters #####
     Nph_tot=Nph_tot # maximum photon occupation
-    Nph=1.0# mean number of photons in initial coherent state
+    Nph=1.0# mean number of photons in initial state
     L=N;
     Omega=omega # drive frequency
     A=coupling # spin-photon coupling strength (drive amplitude)
@@ -332,7 +332,7 @@ def concur_nq(rho,thresh_error):
     R = sp.linalg.sqrtm(sp.linalg.sqrtm(psi_dm) * psi_dm_tilde * sp.linalg.sqrtm(psi_dm))
     eig_vals = sp.linalg.eigvalsh(R);
     eig_vals = np.sort(eig_vals);
-    eig_vals = eig_vals[::-1]
+    eig_vals = eig_vals[::-1];
     eig_vals_sum = eig_vals[0] - eig_vals[1] - eig_vals[2] - eig_vals[3];
     print(np.max([0, eig_vals_sum]))
     return np.max([0, eig_vals_sum])
