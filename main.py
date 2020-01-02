@@ -29,7 +29,7 @@ for omega in omega_vals:
             df = df.append({"L": 8, "coupling": omega * coupling,"omega": omega,"Jzz":1.0,
                             "Jx":x_field,"Boundary":boundary,"Times":t,"P-S Ent":AC_ent,
                             "S-S Ent":Sent,"Observables":Obs,"P_DM":obs_pht_ray,
-                            "G2_0_T":g2_0,"PW_CONC":pairwise_concurrence}, ignore_index=True)
+                            "G2_0_T":g2_0,"PW_CONC":pairwise_concurrence}, ignore_index=True);
 
 
-df.to_pickle("/Users/szabo.48/Desktop/"+ NAME +".pickle")
+df.to_pickle("/Users/szabo.48/Desktop/"+ NAME +".pickle");
