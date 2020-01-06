@@ -64,9 +64,9 @@ class spin_cavity:
 
     def _chain_Hamiltonian(self):
 
-        heis_ray = self.interaction_dict{'Heisenberg'};
-        kit_ray = self.interaction_dict{'Kitaev'};
-        field_ray = self.interaction_dict{'Field'};
+        heis_ray = self.interaction_dict['Heisenberg'];
+        kit_ray = self.interaction_dict['Kitaev'];
+        field_ray = self.interaction_dict['Field'];
 
         assert heis_ray.shape[0] == self.S;
         assert kit_ray.shape[0]==self.S//2;
@@ -89,11 +89,11 @@ class spin_cavity:
 
         return Hamiltion,static;
 
-    def spin_cavity_coupling(self, cavity, coupled_sites=self.S, spin_excitation='x',cavity_excitation='+'):
+    #def spin_cavity_coupling(self, cavity, coupled_sites=self.S, spin_excitation='x',cavity_excitation='+'):
 
 
 
-        return -1;
+    #    return -1;
 
     def _product_state(self, align='ferro', H_vector='z', Sz_sector=None):
         '''Generate a product state along a particular vector direction on Bloch
@@ -334,7 +334,7 @@ def spin_photon_Nsite_DM(N, coupling, Nph_tot=10, state='ferro', decouple=0, pho
             zz_ham = hamiltonian([["zz|", [[1.0,i,j]] ]],[],dtype=np.float64,**obs_args);
             xx_ham = hamiltonian([["xx|", [[1.0,i,j]] ]],[],dtype=np.float64,**obs_args);
 
-            Obs_dict.update({stringz:zz_ham, stringx, xx_ham});
+            Obs_dict.update({stringz:zz_ham, stringx: xx_ham});
 
     Obs_t = obs_vs_time(psi_t,t,Obs_dict);
 
