@@ -7,6 +7,7 @@ from quspin.tools.measurements import obs_vs_time # t_dep measurements
 from quspin.tools.Floquet import Floquet,Floquet_t_vec # Floquet Hamiltonian
 from quspin.basis.photon import coherent_state # HO coherent state
 import numpy as np # generic math functions
+import scipy as sp
 import pandas as pd
 
 from quspin.operators import exp_op # operators

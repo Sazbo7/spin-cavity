@@ -56,10 +56,11 @@ for field in field_vals:
                                         obs_photon=2000,t_max=400.0,state='ferro',vect='z',
                                         J_zz=1.0,J_x=field,return_state_DM=False,periodic=BC, init_state=init_state);
 
-        df = df.append({"L": 8, "coupling": omega * coupling,"omega": omega,"Jzz":1.0,
-                        "Jx":x_field,"Boundary":boundary,"Times":t,"P-S Ent":AC_ent,
-                        "S-S Ent":Sent,"Observables":Obs,"P_DM":obs_pht_ray,
+        df = df.append({"L": Length, "coupling": omega * coupling,"omega": omega,"Jzz":1.0,
+                        "Jx":field,"Boundary":boundary,"Times":t,"P-S Ent":AC_ent,
+                        "S-S Ent":Sent,"Observables":Obs_t,"P_DM":obs_pht_ray,
                         "G2_0_T":g2_0,"PW_CONC":pairwise_concurrence}, ignore_index=True);
 
 
 df.to_pickle("/Users/szabo.48/Desktop/"+ NAME + Length +".pickle");
+print('Completed');
