@@ -4,3 +4,4 @@ init_spin: UNIFORM
 init_cavity: Fock
 init_cavity_num: 0
 boundary: O
+decouple: 0
