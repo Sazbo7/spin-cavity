@@ -1,0 +1,7 @@
+NAME: 2CH_uniform_P
+Length: 8
+init_spin: UNIFORM
+init_cavity: CH
+init_cavity_num: 2
+boundary: P
+decouple: 0
