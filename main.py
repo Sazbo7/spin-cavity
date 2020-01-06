@@ -2,10 +2,9 @@ import sys
 from spin_cavity import *
 import pandas as pd
 
+### Load txt file that contains initial parameters #######
 file_name=sys.argv[1];
-
 initialize = np.loadtxt(fname = file_name, dtype=str);
-
 NAME = initialize[0][1];
 Length = int(initialize[1][1]);
 init_spin=initialize[2][1];
@@ -13,20 +12,6 @@ init_cavity=initialize[3][1];
 init_cavity_num=int(initialize[4][1]);
 boundary=initialize[5][1];
 decouple=int(initialize[6][1:]);
-
-for rows in range(initialize.shape[0]):
-    print(initialize[rows]);
-
-quit();
-
-df_columns = ["L", "coupling", "omega", "Jzz", "Jx", "Boundary", "Times",
-                "P-S Ent", "S-S Ent", "Observables","P_DM", "G2_0_T", "PW_CONC"];
-df = pd.DataFrame(columns=df_columns);
-
-
-field_vals = np.linspace(0, 3, 40);
-coupling_vals = np.linspace(0, 1.2, 21);
-omega_vals = (0.5, 0.8, 1.2, 5.0);
 
 if boundary == "O":
     BC = False;
@@ -41,6 +26,20 @@ elif boundary == "CH":
     CH = True;
 else:
     CH = False;
+
+### Print the initial parameters #####
+for rows in range(initialize.shape[0]):
+    print(initialize[rows]);
+
+### Data saved using Pandas DataFrame to .pickle files ####
+df_columns = ["L", "coupling", "omega", "Jzz", "Jx", "Boundary", "Times",
+                "P-S Ent", "S-S Ent", "Observables","P_DM", "G2_0_T", "PW_CONC"];
+df = pd.DataFrame(columns=df_columns);
+
+
+field_vals = np.linspace(0, 3, 40);
+coupling_vals = np.linspace(0, 1.2, 21);
+omega_vals = (0.5, 0.8, 1.2, 5.0);
 
 for omega in omega_vals:
     for field in field_vals:
