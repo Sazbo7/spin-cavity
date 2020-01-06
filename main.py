@@ -64,4 +64,4 @@ for omega in omega_vals:
 
 
 df.to_pickle("/Users/szabo.48/Desktop/"+ NAME + "_" + str(Length) +".pickle");
-print('Completed');
+print('###Completed###');
