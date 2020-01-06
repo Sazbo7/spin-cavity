@@ -62,5 +62,5 @@ for field in field_vals:
                         "G2_0_T":g2_0,"PW_CONC":pairwise_concurrence}, ignore_index=True);
 
 
-df.to_pickle("/Users/szabo.48/Desktop/"+ NAME + Length +".pickle");
+df.to_pickle("/Users/szabo.48/Desktop/"+ NAME + str(Length) +".pickle");
 print('Completed');
