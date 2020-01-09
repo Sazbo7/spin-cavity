@@ -1,0 +1,7 @@
+NAME: empty_EQ_P
+Length: 8
+init_spin: EQ
+init_cavity: Fock
+init_cavity_num: 0
+boundary: P
+decouple: 0

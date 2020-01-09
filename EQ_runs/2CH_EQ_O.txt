@@ -1,0 +1,7 @@
+NAME: 2CH_EQ_O
+Length: 8
+init_spin: EQ
+init_cavity: CH
+init_cavity_num: 2
+boundary: O
+decouple: 0
