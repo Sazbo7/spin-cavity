@@ -13,6 +13,10 @@ init_cavity_num=int(initialize[4][1]);
 boundary=initialize[5][1];
 decouple=int(initialize[6][1:]);
 
+
+print(initialize);
+quit()
+
 if boundary == "O":
     BC = False;
 elif boundary == "P":
