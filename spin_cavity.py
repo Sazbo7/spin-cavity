@@ -229,7 +229,7 @@ class spin_cavity:
         return tE_state, t;
 
 
-def spin_photon_Nsite_DM(N, coupling, Nph_tot=10, state='ferro', decouple=0, photon_state=0,coherent=False, t_max=10.00,t_steps=100, obs_photon=5, vect='x', omega=0.5, J_zz=0.0, J_xx=0.0, J_xy=0.0, J_z=0.0, J_x=0.0, return_state_DM=False, periodic=True, init_state=None):
+def spin_photon_Nsite_DM(N, coupling, Nph_tot=10, state='ferro', decouple=0, photon_state=0,coherent=False, t_max=10.00,t_steps=100, obs_photon=5, vect='x', omega=0.5, J_zz=0.0, J_xx=0.0, J_yy=0, J_xy=0.0, J_z=0.0, J_x=0.0, return_state_DM=False, periodic=True, init_state=None):
 
     ##### define Boson model parameters #####
     Nph_tot=Nph_tot # maximum photon occupation
@@ -268,6 +268,7 @@ def spin_photon_Nsite_DM(N, coupling, Nph_tot=10, state='ferro', decouple=0, pho
     H_zz = [[J_zz,i,(i+1)%L] for i in range(boundary)] # PBC
     H_xx = [[J_xx,i,(i+1)%L] for i in range(boundary)] # PBC
     H_xy = [[J_xy,i,(i+1)%L] for i in range(boundary)] # PBC
+    H_xy = [[J_yy,i,(i+1)%L] for i in range(boundary)] # PBC
     H_z = [[J_z,i] for i in range(L)] # PBC
     H_x = [[J_x,i] for i in range(L)] # PBC
 
@@ -275,7 +276,7 @@ def spin_photon_Nsite_DM(N, coupling, Nph_tot=10, state='ferro', decouple=0, pho
 
 
     # define static and dynamics lists
-    static=[["|n",ph_energy],["x|-",absorb],["x|+",emit],["z|",at_energy], ["+-|",H_xy],["-+|",H_xy],["zz|",H_zz], ["z|",H_z],["x|",H_x]]
+    static=[["|n",ph_energy],["x|-",absorb],["x|+",emit],["z|",at_energy], ["+-|",H_xy],["-+|",H_xy],["zz|",H_zz], ["xx|",H_xx], ["yy|",H_yy], ["z|",H_z],["x|",H_x]]
     dynamic=[]
 
     # compute atom-photon basis
