@@ -268,7 +268,7 @@ def spin_photon_Nsite_DM(N, coupling, Nph_tot=10, state='ferro', decouple=0, pho
     H_zz = [[J_zz,i,(i+1)%L] for i in range(boundary)] # PBC
     H_xx = [[J_xx,i,(i+1)%L] for i in range(boundary)] # PBC
     H_xy = [[J_xy,i,(i+1)%L] for i in range(boundary)] # PBC
-    H_xy = [[J_yy,i,(i+1)%L] for i in range(boundary)] # PBC
+    H_yy = [[J_yy,i,(i+1)%L] for i in range(boundary)] # PBC
     H_z = [[J_z,i] for i in range(L)] # PBC
     H_x = [[J_x,i] for i in range(L)] # PBC
 

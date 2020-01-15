@@ -15,7 +15,7 @@ decouple=int(initialize[6][1:]);
 
 
 print(initialize);
-quit()
+#quit()
 
 if boundary == "O":
     BC = False;
@@ -45,6 +45,7 @@ field_vals = np.linspace(0, 3, 40);
 coupling_vals = np.linspace(0, 1.2, 21);
 omega_vals = (0.5, 0.8, 1.2, 5.0);
 
+count = 0;
 for omega in omega_vals:
     for field in field_vals:
         for coupling in coupling_vals:
@@ -57,15 +58,16 @@ for omega in omega_vals:
                 init_state=(1.0, 5.0);
 
             t, AC_ent, Sent, Obs_t, obs_pht_ray, g2_0, pairwise_concurrence = spin_photon_Nsite_DM(Length, omega * coupling,
-                                            decouple=decouple,omega=omega,Nph_tot=50,coherent=CH,photon_state=init_cavity_num,t_steps=2000,
-                                            obs_photon=2000,t_max=400.0,state='ferro',vect='z',
+                                            decouple=decouple,omega=omega,Nph_tot=40,coherent=CH,photon_state=init_cavity_num,t_steps=1250,
+                                            obs_photon=1250,t_max=200.0,state='ferro',vect='z',
                                             J_zz=1.0,J_x=field,return_state_DM=False,periodic=BC, init_state=init_state);
 
             df = df.append({"L": Length, "coupling": omega * coupling,"omega": omega,"Jzz":1.0,
                             "Jx":field,"Boundary":boundary,"Times":t,"P-S Ent":AC_ent,
                             "S-S Ent":Sent,"Observables":Obs_t,"P_DM":obs_pht_ray,
                             "G2_0_T":g2_0,"PW_CONC":pairwise_concurrence}, ignore_index=True);
-
+            print(count)
+            count+=1;
 
 df.to_pickle("/Users/szabo.48/Desktop/"+ NAME + "_" + str(Length) +".pickle");
 print('Completed');
