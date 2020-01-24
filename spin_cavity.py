@@ -325,8 +325,12 @@ def spin_photon_Nsite_DM(N, coupling, Nph_tot=10, state='ferro', decouple=0, pho
     zz_tot_t = hamiltonian([["zz|", [[1.0,i,(i+1)%L] for i in range(boundary)] ]],[],dtype=np.float64,**obs_args);
     xx_tot_t = hamiltonian([["xx|", [[1.0,i,(i+1)%L] for i in range(boundary)] ]],[],dtype=np.float64,**obs_args);
 
+
+    ising_static=[["|n",0],["x|-",0],["x|+",0],["z|",0], ["+-|",H_xy],["-+|",H_xy],["zz|",H_zz], ["xx|",H_xx], ["yy|",H_yy], ["z|",H_z],["x|",H_x]]
+    Ising_E_t = hamiltonian(static,dynamic,dtype=np.float64,basis=basis,check_herm=False)
+
     Obs_dict = {"n":n_t,"nn":nn_t,"z_tot":z_tot_t,
-                "x_tot":x_tot_t, "zz_tot":zz_tot_t, "xx_tot":xx_tot_t};
+                "x_tot":x_tot_t, "zz_tot":zz_tot_t, "xx_tot":xx_tot_t, "Ising_t":Ising_E_t};
 
     for i in range(N):
         for j in range(i+1, N):
