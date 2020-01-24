@@ -338,6 +338,14 @@ def spin_photon_Nsite_DM(N, coupling, Nph_tot=10, state='ferro', decouple=0, pho
 
             Obs_dict.update({stringz:zz_ham, stringx: xx_ham});
 
+        stringz = "z%1d" % (i);
+        stringx = "x%1d" % (i);
+
+        z_ham = hamiltonian([["z|", [[1.0,i]] ]],[],dtype=np.float64,**obs_args);
+        x_ham = hamiltonian([["x|", [[1.0,i]] ]],[],dtype=np.float64,**obs_args);
+
+        Obs_dict.update({stringz:z_ham, stringx: x_ham});
+
     Obs_t = obs_vs_time(psi_t,t,Obs_dict);
 
     ####### Number of times to sample the cavity state, could sample at every time so num = 1 ###############
