@@ -60,7 +60,7 @@ for omega in omega_vals:
             t, AC_ent, Sent, Obs_t, obs_pht_ray, g2_0, pairwise_concurrence, zz_dyna, xx_dyna = spin_photon_Nsite_DM(Length, omega * coupling,
                                             decouple=decouple,omega=omega,Nph_tot=40,coherent=CH,photon_state=init_cavity_num,t_steps=1250,
                                             obs_photon=1250,t_max=200.0,state='ferro',vect='z',
-                                            J_zz=1.0,J_x=field,return_state_DM=False,periodic=BC, init_state=init_state);
+                                            J_zz=1.0,J_x=field,return_state_DM=False,periodic=BC, init_state=init_state, Dynamical_Spins=True);
 
             df = df.append({"L": Length, "coupling": omega * coupling,"omega": omega,"Jzz":1.0,
                             "Jx":field,"Boundary":boundary,"Times":t,"P-S Ent":AC_ent,
