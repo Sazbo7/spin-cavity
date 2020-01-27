@@ -408,9 +408,9 @@ def spin_photon_Nsite_DM(N, coupling, Nph_tot=10, state='ferro', decouple=0, pho
             obs_pht_ray[i//num] = photon_dm
 
     if return_state_DM==False:
-        return t, AC_ent, Sent, Obs_t, obs_pht_ray, g2_0, pairwise_concurrence;
+        return t, AC_ent, Sent, Obs_t, obs_pht_ray, g2_0, pairwise_concurrence, zz_dynamical, xx_dynamical;
     else:
-        return t, AC_ent, Sent, Obs_t, obs_pht_ray, g2_0, pairwise_concurrence, spin_subsys_dm;
+        return t, AC_ent, Sent, Obs_t, obs_pht_ray, g2_0, pairwise_concurrence, zz_dynamical, xx_dynamical, spin_subsys_dm;
 
 
 def concurrence(rho, subsys_len=2,thresh_error=1e-6):

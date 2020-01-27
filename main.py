@@ -37,7 +37,7 @@ for rows in range(initialize.shape[0]):
 
 ### Data saved using Pandas DataFrame to .pickle files ####
 df_columns = ["L", "coupling", "omega", "Jzz", "Jx", "Boundary", "Times",
-                "P-S Ent", "S-S Ent", "Observables","P_DM", "G2_0_T", "PW_CONC"];
+                "P-S Ent", "S-S Ent", "Observables","P_DM", "G2_0_T", "PW_CONC", "ZZ_Dyna", "XX_Dyna"];
 df = pd.DataFrame(columns=df_columns);
 
 
@@ -57,7 +57,7 @@ for omega in omega_vals:
             elif init_spin=="Quench":
                 init_state=(1.0, 5.0);
 
-            t, AC_ent, Sent, Obs_t, obs_pht_ray, g2_0, pairwise_concurrence = spin_photon_Nsite_DM(Length, omega * coupling,
+            t, AC_ent, Sent, Obs_t, obs_pht_ray, g2_0, pairwise_concurrence, zz_dyna, xx_dyna = spin_photon_Nsite_DM(Length, omega * coupling,
                                             decouple=decouple,omega=omega,Nph_tot=40,coherent=CH,photon_state=init_cavity_num,t_steps=1250,
                                             obs_photon=1250,t_max=200.0,state='ferro',vect='z',
                                             J_zz=1.0,J_x=field,return_state_DM=False,periodic=BC, init_state=init_state);
@@ -65,7 +65,7 @@ for omega in omega_vals:
             df = df.append({"L": Length, "coupling": omega * coupling,"omega": omega,"Jzz":1.0,
                             "Jx":field,"Boundary":boundary,"Times":t,"P-S Ent":AC_ent,
                             "S-S Ent":Sent,"Observables":Obs_t,"P_DM":obs_pht_ray,
-                            "G2_0_T":g2_0,"PW_CONC":pairwise_concurrence}, ignore_index=True);
+                            "G2_0_T":g2_0,"PW_CONC":pairwise_concurrence, "ZZ_Dyna":zz_dyna, "XX_Dyna":xx_dyna}, ignore_index=True);
             print(count)
             count+=1;
 
