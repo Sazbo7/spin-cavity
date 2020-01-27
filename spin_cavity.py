@@ -229,7 +229,7 @@ class spin_cavity:
         return tE_state, t;
 
 
-def spin_photon_Nsite_DM(N, coupling, Nph_tot=10, state='ferro', decouple=0, photon_state=0,coherent=False, t_max=10.00,t_steps=100, obs_photon=5, vect='x', omega=0.5, J_zz=0.0, J_xx=0.0, J_yy=0, J_xy=0.0, J_z=0.0, J_x=0.0, return_state_DM=False, periodic=True, init_state=None):
+def spin_photon_Nsite_DM(N, coupling, Nph_tot=10, state='ferro', decouple=0, photon_state=0,coherent=False, t_max=10.00,t_steps=100, obs_photon=5, vect='x', omega=0.5, J_zz=0.0, J_xx=0.0, J_yy=0, J_xy=0.0, J_z=0.0, J_x=0.0, return_state_DM=False, periodic=True, init_state=None, Dynamical_Spins=False):
 
     ##### define Boson model parameters #####
     Nph_tot=Nph_tot # maximum photon occupation
@@ -332,6 +332,12 @@ def spin_photon_Nsite_DM(N, coupling, Nph_tot=10, state='ferro', decouple=0, pho
     Obs_dict = {"n":n_t,"nn":nn_t,"z_tot":z_tot_t,
                 "x_tot":x_tot_t, "zz_tot":zz_tot_t, "xx_tot":xx_tot_t, "Ising_t":Ising_E_t};
 
+    if Dynamical_Spins == True:
+        zz_dynamical = np.zeros([L, len(t)]);
+        xx_dynamical = np.zeros([L, len(t)]);
+
+
+
     for i in range(N):
         for j in range(i+1, N):
             stringz = "z%1dz%1d" % (i, j);
@@ -349,6 +355,23 @@ def spin_photon_Nsite_DM(N, coupling, Nph_tot=10, state='ferro', decouple=0, pho
         x_ham = hamiltonian([["x|", [[1.0,i]] ]],[],dtype=np.float64,**obs_args);
 
         Obs_dict.update({stringz:z_ham, stringx: x_ham});
+
+        if Dynamical_Spins == True:
+            x0 = hamiltonian([["x|", [[1.0, 0]] ]],[],dtype=np.float64,**obs_args);
+            xl=hamiltonian([["x|", [[1.0, i]] ]],[],dtype=np.float64,**obs_args);
+            x0_psi = x0.dot(psi);
+            x0_psi_t = H.evolve(x0_psi, 0.0, t);
+            xl = xl.expt_value(x0_psi_t);
+
+            xx_dynamical[i] = xl;
+
+            z0 = hamiltonian([["z|", [[1.0, 0]] ]],[],dtype=np.float64,**obs_args);
+            zl=hamiltonian([["z|", [[1.0, i]] ]],[],dtype=np.float64,**obs_args);
+            z0_psi = z0.dot(psi);
+            z0_psi_t = H.evolve(z0_psi, 0.0, t);
+            zl = zl.expt_value(z0_psi_t);
+
+            zz_dynamical[i] = zl;
 
     Obs_t = obs_vs_time(psi_t,t,Obs_dict);
 
