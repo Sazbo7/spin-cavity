@@ -332,9 +332,8 @@ def spin_photon_Nsite_DM(N, coupling, Nph_tot=10, state='ferro', decouple=0, pho
     Obs_dict = {"n":n_t,"nn":nn_t,"z_tot":z_tot_t,
                 "x_tot":x_tot_t, "zz_tot":zz_tot_t, "xx_tot":xx_tot_t, "Ising_t":Ising_E_t};
 
-    if Dynamical_Spins == True:
-        zz_dynamical = np.zeros([L, len(t)]);
-        xx_dynamical = np.zeros([L, len(t)]);
+    zz_dynamical = np.zeros([L, len(t)]);
+    xx_dynamical = np.zeros([L, len(t)]);
 
 
 
