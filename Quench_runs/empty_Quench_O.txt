@@ -1,6 +1,6 @@
 NAME: empty_Quench_O
 Length: 8
-init_spin: UNIFORM
+init_spin: Quench
 init_cavity: Fock
 init_cavity_num: 0
 boundary: O

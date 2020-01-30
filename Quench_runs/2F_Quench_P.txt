@@ -1,6 +1,6 @@
 NAME: 2F_Quench_P
 Length: 8
-init_spin: UNIFORM
+init_spin: Quench
 init_cavity: Fock
 init_cavity_num: 2
 boundary: P
