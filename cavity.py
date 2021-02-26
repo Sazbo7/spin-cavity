@@ -13,7 +13,7 @@ from qutip.piqs import *
 class cavity:
 
     def __init__(self, Ntot, types='Uniform', sites=1, species=1):
-        '''Initialize a cavity state. Can be made of up bosons or fermions and can be a single uniform cavity
+        '''Initialize a cavity state blank. Can be made of up bosons or fermions and can be a single uniform cavity
          or a cavity coupled to individuals sites.
 
         Parameters
