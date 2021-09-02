@@ -3,6 +3,8 @@ from spin_cavity import *
 import pandas as pd
 
 ### Load txt file that contains initial parameters #######
+
+SAVE_LOC = "Users/user/Desktop/folder"
 file_name=sys.argv[1];
 initialize = np.loadtxt(fname = file_name, dtype=str);
 NAME = initialize[0][1];
@@ -69,5 +71,5 @@ for omega in omega_vals:
             print(count)
             count+=1;
 
-df.to_pickle("/Users/szabo.48/Desktop/"+ NAME + "_" + str(Length) +".pickle");
+df.to_pickle(SAVE_LOC+ NAME + "_" + str(Length) +".pickle");
 print('Completed');
