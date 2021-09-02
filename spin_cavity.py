@@ -14,7 +14,6 @@ from quspin.basis.photon import coherent_state # HO coherent state
 from quspin.operators import exp_op # operators
 from quspin.basis import spin_basis_general # spin basis constructor
 from quspin.tools.measurements import ent_entropy # Entanglement Entropy
-from qutip import *
 
 import os
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
@@ -56,12 +55,12 @@ def spin_photon_Nsite_DM(N, coupling, Nph_tot=10, state='ferro', decouple=0, pho
     else:
         boundary = L-1;
 
-    H_zz = [[J_zz,i,(i+1)%L] for i in range(boundary)] # PBC
-    H_xx = [[J_xx,i,(i+1)%L] for i in range(boundary)] # PBC
-    H_xy = [[J_xy,i,(i+1)%L] for i in range(boundary)] # PBC
-    H_yy = [[J_yy,i,(i+1)%L] for i in range(boundary)] # PBC
-    H_z = [[J_z,i] for i in range(L)] # PBC
-    H_x = [[J_x,i] for i in range(L)] # PBC
+    H_zz = [[J_zz,i,(i+1)%L] for i in range(boundary)]
+    H_xx = [[J_xx,i,(i+1)%L] for i in range(boundary)]
+    H_xy = [[J_xy,i,(i+1)%L] for i in range(boundary)]
+    H_yy = [[J_yy,i,(i+1)%L] for i in range(boundary)]
+    H_z = [[J_z,i] for i in range(L)]
+    H_x = [[J_x,i] for i in range(L)]
 
     psi_atom = get_product_state(N,state=state,vect=vect);
 
@@ -74,6 +73,7 @@ def spin_photon_Nsite_DM(N, coupling, Nph_tot=10, state='ferro', decouple=0, pho
     basis=photon_basis(spin_basis_1d,L=N,Nph=Nph_tot)
     atom_basis=spin_basis_1d(L=N)
     H=hamiltonian(static,dynamic,dtype=np.float64,basis=basis,check_herm=False)
+
     # compute atom-photon Hamiltonian H
     if type(init_state) == tuple:
         H_zz = [[init_state[0],i,(i+1)%L] for i in range(boundary)] # PBC
@@ -89,6 +89,7 @@ def spin_photon_Nsite_DM(N, coupling, Nph_tot=10, state='ferro', decouple=0, pho
     else:
         psi_boson = coherent_state(np.sqrt(photon_state), Nph_tot+1)
     psi=np.kron(psi_atom,psi_boson)
+
     ##### calculate time evolution #####
     obs_args={"basis":basis,"check_herm":False,"check_symm":False}
     t = np.linspace(0, t_max, t_steps);
@@ -117,9 +118,6 @@ def spin_photon_Nsite_DM(N, coupling, Nph_tot=10, state='ferro', decouple=0, pho
     zz_tot_t = hamiltonian([["zz|", [[1.0,i,(i+1)%L] for i in range(boundary)] ]],[],dtype=np.float64,**obs_args);
     xx_tot_t = hamiltonian([["xx|", [[1.0,i,(i+1)%L] for i in range(boundary)] ]],[],dtype=np.float64,**obs_args);
 
-
-#    ising_static=[["|n",0],["x|-",0],["x|+",0],["z|",0], ["+-|",H_xy],["-+|",H_xy],["zz|",H_zz], ["xx|",H_xx], ["yy|",H_yy], ["z|",H_z],["x|",H_x]]
-#    Ising_E_t = hamiltonian(static,dynamic,dtype=np.float64,basis=basis,check_herm=False)
 
     Obs_dict = {"n":n_t,"nn":nn_t,"z_tot":z_tot_t,
                 "x_tot":x_tot_t, "zz_tot":zz_tot_t, "xx_tot":xx_tot_t};
@@ -280,13 +278,13 @@ def concur_2q(rho,thresh_error):
     eig_vals = np.sort(eig_vals);
     eig_vals = eig_vals[::-1]
     eig_vals_sum = eig_vals[0] - eig_vals[1] - eig_vals[2] - eig_vals[3];
-    #print(np.max([0, eig_vals_sum]))
+
     return np.max([0, eig_vals_sum]);
 
 def concur_nq(rho,thresh_error):
     sigma_y_array = np.array(sigmay())
     concurrence_array = np.kron(sigma_y_array, sigma_y_array)
-    #print(rho)
+
     super_threshold_indices = np.abs(rho) < thresh_error;
     rho[super_threshold_indices] = 0;
     psi_dm = rho;
@@ -336,13 +334,12 @@ def get_product_state(N,state='ferro',vect='z'):
     H_field = [[1.0 * fm**i, i] for i in range(N)] # PBC
     static=[[vect,H_field]]
     dynamic=[]
-    # compute atom-photon basis
+
     basis=spin_basis_1d(L=N);
     H=hamiltonian(static,dynamic,dtype=np.float64,basis=basis)
 
     E_min,psi_0 = H.eigsh(k=max_eigval,which="SA");
     psi_0 = psi_0.T[0].reshape((-1,));
-    #print(psi_0)
     return psi_0;
 
 def get_ground_state(N, Hamiltonian):

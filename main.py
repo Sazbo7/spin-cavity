@@ -17,7 +17,6 @@ decouple=int(initialize[6][1:]);
 
 
 print(initialize);
-#quit()
 
 if boundary == "O":
     BC = False;
